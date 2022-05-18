@@ -3,9 +3,9 @@ package com.pluu.sample.codeforreadability.presentation
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.pluu.sample.codeforreadability.MainCoroutineRule
 import com.pluu.sample.codeforreadability.data.FakeGeneratorRepository
+import com.pluu.sample.codeforreadability.data.FakeSavingRepository
 import com.pluu.sample.codeforreadability.util.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
@@ -21,12 +21,14 @@ class SearchViewModelTest {
     var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var viewModel: SearchViewModel
-    private lateinit var repository: FakeGeneratorRepository
+    private lateinit var generatorRepository: FakeGeneratorRepository
+    private lateinit var savingRepository: FakeSavingRepository
 
     @Before
     fun setUp() {
-        repository = FakeGeneratorRepository()
-        viewModel = SearchViewModel(repository)
+        generatorRepository = FakeGeneratorRepository()
+        savingRepository = FakeSavingRepository()
+        viewModel = SearchViewModel(generatorRepository, savingRepository)
     }
 
     @Test

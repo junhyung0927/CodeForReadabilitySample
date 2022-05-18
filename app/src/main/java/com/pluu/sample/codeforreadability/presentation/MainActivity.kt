@@ -10,6 +10,7 @@ import androidx.core.content.edit
 import androidx.lifecycle.ViewModelProvider
 import com.pluu.sample.codeforreadability.data.GeneratorRepository
 import com.pluu.sample.codeforreadability.data.GeneratorRepositoryImpl
+import com.pluu.sample.codeforreadability.data.SavingRepositoryImpl
 import com.pluu.sample.codeforreadability.databinding.ActivityMainBinding
 import com.pluu.sample.codeforreadability.utils.dp
 
@@ -20,11 +21,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val viewModel by lazy {
-        SearchViewModel(GeneratorRepositoryImpl())
-    }
-
-    private val preferences: SharedPreferences by lazy {
-        getSharedPreferences("sample", Context.MODE_PRIVATE)
+        SearchViewModel(
+            GeneratorRepositoryImpl(),
+            SavingRepositoryImpl(this)
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,13 +38,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpViews() {
         sampleAdapter = SampleAdapter(
-            onFavorite = {
-                preferences.edit {
-                    putString("KEY", it)
-                }
-                sampleAdapter.updateFavorite(it)
-                sampleAdapter.notifyDataSetChanged()
-            }
+            onFavorite = viewModel::updateFavorite
         )
 
         binding.btnGenerate.setOnClickListener {
@@ -59,8 +53,6 @@ class MainActivity : AppCompatActivity() {
             adapter = sampleAdapter
             addItemDecoration(SampleItemDecoration(4.dp))
         }
-
-        sampleAdapter.updateFavorite(preferences.getString("KEY", null).orEmpty())
     }
 
     private fun setUpObserve() {
@@ -72,5 +64,9 @@ class MainActivity : AppCompatActivity() {
         viewModel.messageDuplicatedItemText.observe(this@MainActivity) {
             Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         }
+    }
+
+    companion object {
+        const val preferencesKey = "KEY"
     }
 }

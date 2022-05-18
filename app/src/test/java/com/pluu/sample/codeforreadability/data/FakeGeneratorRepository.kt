@@ -7,9 +7,10 @@ class FakeGeneratorRepository: GeneratorRepository {
 
     override fun generator(): SampleItem {
         return SampleItem(
-            "",
+            text = ('a' + (0 until 26).random()).toString(),
             0
             )
     }
 
 }
+
