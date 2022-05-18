@@ -37,9 +37,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpViews() {
-        sampleAdapter = SampleAdapter(
-            onFavorite = viewModel::updateFavorite
-        )
+        sampleAdapter = SampleAdapter()
 
         binding.btnGenerate.setOnClickListener {
             viewModel.generate()

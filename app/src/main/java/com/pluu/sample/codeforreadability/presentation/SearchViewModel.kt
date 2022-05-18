@@ -3,6 +3,7 @@ package com.pluu.sample.codeforreadability.presentation
 import androidx.lifecycle.*
 import com.pluu.sample.codeforreadability.data.GeneratorRepository
 import com.pluu.sample.codeforreadability.data.SavingRepository
+import com.pluu.sample.codeforreadability.model.GeneratorItem
 import com.pluu.sample.codeforreadability.model.SampleItem
 import com.pluu.sample.codeforreadability.provider.provideRepository
 import kotlinx.coroutines.launch
@@ -38,7 +39,12 @@ class SearchViewModel(
 
         if (cachedItemList.none() { it.text == item.text }) {
             val favoriteText = savingRepository.getFavorite()
-            cachedItemList.add(item.copy(isFavorite = item.text == favoriteText))
+            cachedItemList.add(
+                item.toUiModel(
+                    isFavorite = item.text == favoriteText,
+                    onFavorite = ::updateFavorite
+                )
+            )
             _item.value = cachedItemList.sortedBy { it.text }
         } else {
             _messageDuplicatedItemText.value = "Duplicate item : ${item.text}"
@@ -62,3 +68,13 @@ class SearchViewModel(
         _item.value = cachedItemList.sortedBy { it.text }
     }
 }
+
+private fun GeneratorItem.toUiModel(
+    isFavorite: Boolean,
+    onFavorite: (String) -> Unit
+): SampleItem = SampleItem(
+    text = text,
+    bgColor = bgColor,
+    isFavorite = isFavorite,
+    onFavorite = onFavorite
+)
