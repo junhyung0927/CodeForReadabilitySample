@@ -21,11 +21,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val viewModel by lazy {
-        SearchViewModel(
-            SavingRepositoryImpl(this),
-            ItemRepositoryImpl()
-        )
+    private val viewModel by viewModels<SearchViewModel>() {
+        SearchViewModelFactory(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

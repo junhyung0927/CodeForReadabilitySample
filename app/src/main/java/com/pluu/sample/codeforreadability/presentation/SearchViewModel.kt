@@ -1,8 +1,8 @@
 package com.pluu.sample.codeforreadability.presentation
 
+import android.content.Context
 import androidx.lifecycle.*
-import com.pluu.sample.codeforreadability.data.ItemRepository
-import com.pluu.sample.codeforreadability.data.SavingRepository
+import com.pluu.sample.codeforreadability.data.*
 import com.pluu.sample.codeforreadability.model.GeneratorItem
 import com.pluu.sample.codeforreadability.model.SampleItem
 import com.pluu.sample.codeforreadability.provider.provideRepository
@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import logcat.logcat
 
 class SearchViewModel(
+    private val logRepository: SampleRepository,
     private val savingRepository: SavingRepository,
     private val itemRepository: ItemRepository
 ) : ViewModel() {
@@ -20,13 +21,10 @@ class SearchViewModel(
     private val _messageDuplicatedItemText = MutableLiveData<String>()
     val messageDuplicatedItemText: LiveData<String> = _messageDuplicatedItemText
 
-    private val logRepository by lazy {
-        provideRepository()
-    }
 
     private fun sending() {
         viewModelScope.launch {
-            val result = logRepository.sendLog()
+            val result = logRepository.sendLogFlow()
             logcat { result.toString() }
         }
     }
