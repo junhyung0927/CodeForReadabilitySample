@@ -1,11 +1,15 @@
 package com.pluu.sample.codeforreadability.data
 
 class FakeSavingRepository: SavingRepository {
+    companion object {
+        private const val fakePreferences = "TEST_SAMPLE"
+    }
+
     override fun saveFavorite(text: String) {
-        TODO("Not yet implemented")
+        fakePreferences
     }
 
     override fun getFavorite(): String {
-        TODO("Not yet implemented")
+        return fakePreferences
     }
 }

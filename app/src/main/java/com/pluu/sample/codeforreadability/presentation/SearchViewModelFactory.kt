@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.pluu.sample.codeforreadability.data.ItemRepositoryImpl
 import com.pluu.sample.codeforreadability.data.SampleRepositoryImpl
 import com.pluu.sample.codeforreadability.data.SavingRepositoryImpl
+import com.pluu.sample.codeforreadability.provider.RandomGenerator
 import com.pluu.sample.codeforreadability.provider.provideRepository
 
 @Suppress("UNCHECKED_CAST")
@@ -16,7 +17,7 @@ class SearchViewModelFactory(
         return SearchViewModel(
             logRepository = SampleRepositoryImpl(provideRepository()),
             savingRepository = SavingRepositoryImpl(context),
-            itemRepository = ItemRepositoryImpl()
+            itemRepository = ItemRepositoryImpl(randomGenerator = RandomGenerator())
         ) as T
     }
 }

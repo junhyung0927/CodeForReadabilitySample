@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.pluu.sample.codeforreadability.databinding.ItemSampleBinding
 import com.pluu.sample.codeforreadability.model.SampleItem
+import com.pluu.sample.codeforreadability.model.isDark
 
 class SampleViewHolder(
     private val binding: ItemSampleBinding,

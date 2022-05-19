@@ -1,11 +1,9 @@
 package com.pluu.sample.codeforreadability.presentation
 
-import android.content.Context
 import androidx.lifecycle.*
 import com.pluu.sample.codeforreadability.data.*
 import com.pluu.sample.codeforreadability.model.GeneratorItem
 import com.pluu.sample.codeforreadability.model.SampleItem
-import com.pluu.sample.codeforreadability.provider.provideRepository
 import kotlinx.coroutines.launch
 import logcat.logcat
 
@@ -24,7 +22,7 @@ class SearchViewModel(
 
     private fun sending() {
         viewModelScope.launch {
-            val result = logRepository.sendLogFlow()
+            val result = logRepository.sendLog()
             logcat { result.toString() }
         }
     }
@@ -45,12 +43,12 @@ class SearchViewModel(
         refresh()
     }
 
-    fun updateFavorite(text: String) {
+    private fun updateFavorite(text: String) {
         savingRepository.saveFavorite(text)
         refresh()
     }
 
-    fun refresh() {
+    private fun refresh() {
         val savingText = savingRepository.getFavorite()
         _item.value = itemRepository.data.map {
             it.toUiModel(

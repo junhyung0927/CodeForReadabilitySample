@@ -3,7 +3,7 @@ package com.pluu.sample.codeforreadability.data
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-interface SampleRepository {
+interface SampleRepository: SampleApi {
     fun sendLogFlow(): Flow<LogResult>
 }
 
