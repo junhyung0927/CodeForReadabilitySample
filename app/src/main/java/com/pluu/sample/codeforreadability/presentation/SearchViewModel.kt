@@ -1,7 +1,7 @@
 package com.pluu.sample.codeforreadability.presentation
 
 import androidx.lifecycle.*
-import com.pluu.sample.codeforreadability.data.GeneratorRepository
+import com.pluu.sample.codeforreadability.data.ItemRepository
 import com.pluu.sample.codeforreadability.data.SavingRepository
 import com.pluu.sample.codeforreadability.model.GeneratorItem
 import com.pluu.sample.codeforreadability.model.SampleItem
@@ -10,8 +10,8 @@ import kotlinx.coroutines.launch
 import logcat.logcat
 
 class SearchViewModel(
-    private val generatorRepository: GeneratorRepository,
-    private val savingRepository: SavingRepository
+    private val savingRepository: SavingRepository,
+    private val itemRepository: ItemRepository
 ) : ViewModel() {
 
     private val _item = MutableLiveData<List<SampleItem>>()
@@ -19,8 +19,6 @@ class SearchViewModel(
 
     private val _messageDuplicatedItemText = MutableLiveData<String>()
     val messageDuplicatedItemText: LiveData<String> = _messageDuplicatedItemText
-
-    private val cachedItemList = mutableListOf<SampleItem>()
 
     private val logRepository by lazy {
         provideRepository()
@@ -31,41 +29,37 @@ class SearchViewModel(
             val result = logRepository.sendLog()
             logcat { result.toString() }
         }
-
     }
 
     fun generate() {
-        val item = generatorRepository.generator()
-
-        if (cachedItemList.none() { it.text == item.text }) {
-            val favoriteText = savingRepository.getFavorite()
-            cachedItemList.add(
-                item.toUiModel(
-                    isFavorite = item.text == favoriteText,
-                    onFavorite = ::updateFavorite
-                )
-            )
-            _item.value = cachedItemList.sortedBy { it.text }
-        } else {
-            _messageDuplicatedItemText.value = "Duplicate item : ${item.text}"
-        }
+        itemRepository.generate()
+            .onSuccess {
+                refresh()
+            }
+            .onFailure {
+                _messageDuplicatedItemText.value = it.message
+            }
     }
 
     fun reset() {
         sending()
-        cachedItemList.clear()
-        _item.value = emptyList()
+        itemRepository.reset()
+        refresh()
     }
 
     fun updateFavorite(text: String) {
         savingRepository.saveFavorite(text)
-        val snapShot = cachedItemList.map {
-            it.copy(isFavorite = it.text == text)
-        }
+        refresh()
+    }
 
-        cachedItemList.clear()
-        cachedItemList.addAll(snapShot)
-        _item.value = cachedItemList.sortedBy { it.text }
+    fun refresh() {
+        val savingText = savingRepository.getFavorite()
+        _item.value = itemRepository.data.map {
+            it.toUiModel(
+                isFavorite = it.text == savingText,
+                onFavorite = ::updateFavorite
+            )
+        }.sortedBy { it.text }
     }
 }
 

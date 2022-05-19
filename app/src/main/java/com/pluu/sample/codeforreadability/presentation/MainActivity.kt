@@ -10,6 +10,7 @@ import androidx.core.content.edit
 import androidx.lifecycle.ViewModelProvider
 import com.pluu.sample.codeforreadability.data.GeneratorRepository
 import com.pluu.sample.codeforreadability.data.GeneratorRepositoryImpl
+import com.pluu.sample.codeforreadability.data.ItemRepositoryImpl
 import com.pluu.sample.codeforreadability.data.SavingRepositoryImpl
 import com.pluu.sample.codeforreadability.databinding.ActivityMainBinding
 import com.pluu.sample.codeforreadability.utils.dp
@@ -22,8 +23,8 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel by lazy {
         SearchViewModel(
-            GeneratorRepositoryImpl(),
-            SavingRepositoryImpl(this)
+            SavingRepositoryImpl(this),
+            ItemRepositoryImpl()
         )
     }
 
