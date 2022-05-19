@@ -26,8 +26,8 @@ class SampleViewHolder(
     fun onBind(item: SampleItem) {
         this.item = item
         binding.btnButton.text = item.text
-        binding.btnButton.setTextColor(if (item.isDarkBg()) Color.WHITE else Color.BLACK)
-        binding.btnButton.backgroundTintList = ColorStateList.valueOf(item.bgColor)
+        binding.btnButton.setTextColor(if (item.bgColor.isDark()) Color.WHITE else Color.BLACK)
+        binding.btnButton.backgroundTintList = ColorStateList.valueOf(item.bgColor.value)
         binding.ivFavorite.isVisible = item.isFavorite
     }
 
