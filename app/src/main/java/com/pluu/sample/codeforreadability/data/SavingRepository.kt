@@ -14,6 +14,7 @@ interface SavingRepository {
 class SavingRepositoryImpl(
     context: Context
 ) : SavingRepository {
+
     companion object {
         private const val preferencesName = "SAMPLE"
     }
